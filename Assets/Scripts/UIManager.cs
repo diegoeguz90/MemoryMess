@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
@@ -29,6 +30,7 @@ public class UIManager : MonoBehaviour
     void onClickStartBtn()
     {
         Debug.Log("Start button clicked!");
+        SceneManager.LoadScene(1);
     }
 
     void onClickExitBtn()
