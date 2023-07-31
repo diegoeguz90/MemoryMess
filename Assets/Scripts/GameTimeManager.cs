@@ -4,14 +4,17 @@ using UnityEngine;
 
 public class GameTimeManager : MonoBehaviour
 {
+    // singleton
+    public static GameTimeManager Instance { get; private set; }
+
     [SerializeField] float instructionsTime;
-    [SerializeField] float memorizeTime;
-    [SerializeField] float playTime;
+    private float memorizeTime;
+    private float organiceTime;
 
     public CountDown instructions1Timer { get; private set; }
     public CountDown memorizeTimer { get; private set; }
     public CountDown instructions2Timer { get; private set; }
-    public CountDown playTimer { get; private set; }
+    public CountDown organiceTimer { get; private set; }
     public enum states
     {
         instructions1,
@@ -22,8 +25,6 @@ public class GameTimeManager : MonoBehaviour
     }
     public states currentState { get; private set; }
 
-    // singleton
-    public static GameTimeManager Instance { get; private set; }
 
     private void Awake()
     {
@@ -42,10 +43,15 @@ public class GameTimeManager : MonoBehaviour
     void Start()
     {
         currentState = states.instructions1;
+
+        memorizeTime = SavingDataManager.instance.tMemorize;
+        organiceTime = SavingDataManager.instance.tOrganize;
+
         instructions1Timer = gameObject.AddComponent<CountDown>();
         memorizeTimer = gameObject.AddComponent<CountDown>();
         instructions2Timer = gameObject.AddComponent<CountDown>();
-        playTimer = gameObject.AddComponent<CountDown>();
+        organiceTimer = gameObject.AddComponent<CountDown>();
+        
         StateMachine();
     }
 
@@ -63,7 +69,7 @@ public class GameTimeManager : MonoBehaviour
                 instructions2Timer.StartTimer(instructionsTime);
                 break;
             case states.play:
-                playTimer.StartTimer(playTime);
+                organiceTimer.StartTimer(organiceTime);
                 break;
             case states.results:
                 break;
@@ -89,7 +95,7 @@ public class GameTimeManager : MonoBehaviour
             currentState = states.play;
             StateMachine();
         }
-        if (playTimer._isFinish && currentState == states.play)
+        if (organiceTimer._isFinish && currentState == states.play)
         {
             currentState = states.results;
             StateMachine();

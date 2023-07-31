@@ -39,14 +39,17 @@ public class GrabableManager : MonoBehaviour
 
     public void SetSelectorPos(GameObject selectedObject)
     {
-        switch (currentState)
+        if (GameTimeManager.Instance.currentState == GameTimeManager.states.play)
         {
-            case state.waitSelected:
-                ShowSelector(selectedObject); 
-                break;
-            case state.changePosition:
-                ChangePositions(selectedObject); 
-                break;
+            switch (currentState)
+            {
+                case state.waitSelected:
+                    ShowSelector(selectedObject);
+                    break;
+                case state.changePosition:
+                    ChangePositions(selectedObject);
+                    break;
+            }
         }
     }
 

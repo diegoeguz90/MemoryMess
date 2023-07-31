@@ -5,20 +5,25 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-public class SettingsHandler : MonoBehaviour
+public class SavingDataManager : MonoBehaviour
 {
+    // singleton
+    public static SavingDataManager instance;
+
     [System.Serializable]
     class PlayerSettings
     {
-        public int rowSize;
-        public int columnSize;
+        public int tMemorize;
+        public int tOrganize;
+        public int scenario;
     }
 
-    public int rowSize { get; set; }
-    public int columnSize { get; set; }
+    public int tMemorize { get; set; }
+    public int tOrganize { get; set; }
+    public int scenario { get; set; }
 
-    // singleton
-    public static SettingsHandler instance;
+    public delegate void LoadData();
+    public static event LoadData OnLoadData;
 
     private void Awake()
     {
@@ -35,8 +40,9 @@ public class SettingsHandler : MonoBehaviour
     public void SaveSettings()
     {
         PlayerSettings settings = new PlayerSettings();
-        settings.rowSize = rowSize;
-        settings.columnSize = columnSize;
+        settings.tMemorize = tMemorize;
+        settings.tOrganize = tOrganize;
+        settings.scenario = scenario;
 
         string json = JsonUtility.ToJson(settings);
 
@@ -51,8 +57,11 @@ public class SettingsHandler : MonoBehaviour
             string json = File.ReadAllText(path);
             PlayerSettings settings = JsonUtility.FromJson<PlayerSettings>(json);
 
-            rowSize = settings.rowSize;
-            columnSize = settings.columnSize;
+            tMemorize = settings.tMemorize;
+            tOrganize = settings.tOrganize;
+            scenario = settings.scenario;
+
+            OnLoadData();
         }
     }
 }
