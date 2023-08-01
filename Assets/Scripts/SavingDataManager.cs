@@ -11,7 +11,7 @@ public class SavingDataManager : MonoBehaviour
     public static SavingDataManager instance;
 
     [System.Serializable]
-    class PlayerSettings
+    public class PlayerSettings
     {
         public int tMemorize;
         public int tOrganize;

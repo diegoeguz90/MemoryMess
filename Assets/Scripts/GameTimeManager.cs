@@ -72,6 +72,7 @@ public class GameTimeManager : MonoBehaviour
                 organiceTimer.StartTimer(organiceTime);
                 break;
             case states.results:
+                CloudSaveManager.Instance.SaveDataCloud();
                 break;
             default:
                 break;
