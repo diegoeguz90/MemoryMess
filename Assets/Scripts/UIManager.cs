@@ -31,7 +31,7 @@ public class UIManager : MonoBehaviour
         mainMenu.SetActive(true);
         settingsMenu.SetActive(false);
 
-        SavingDataManager.instance.LoadSettings();
+        SettingsDataManager.instance.LoadSettings();
     }
 
     void onClickSettingsBtn()
@@ -45,7 +45,7 @@ public class UIManager : MonoBehaviour
         mainMenu.SetActive(true);
         settingsMenu.SetActive(false);
 
-        SavingDataManager.instance.SaveSettings();
+        SettingsDataManager.instance.SaveSettings();
     }
 
     void onClickStartBtn()

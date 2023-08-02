@@ -11,6 +11,8 @@ using UnityEngine.Events;
 
 public class CloudSaveManager : MonoBehaviour
 {
+    private int session;
+
     // Singleton
     public static CloudSaveManager _instance;
     public static CloudSaveManager Instance => _instance;
@@ -38,6 +40,16 @@ public class CloudSaveManager : MonoBehaviour
     // Start is called before the first frame update
     async void Start()
     {
+        session = 0;
+        if(PlayerPrefs.GetInt("session") == 0)
+        {
+            session++;
+        }
+        else
+        {
+            session = PlayerPrefs.GetInt("session");
+        }
+
         // Initialize unity services
         await UnityServices.InitializeAsync();
 
@@ -46,6 +58,8 @@ public class CloudSaveManager : MonoBehaviour
 
         // Unity Login
         await SignInAnonymouslyAsync();
+
+
     }
 
     void SetupEvents()
@@ -83,15 +97,17 @@ public class CloudSaveManager : MonoBehaviour
 
     public async void SaveDataCloud()
     {
+        session++;
+        PlayerPrefs.SetInt("session", session);
         saveData myData = new saveData();
-        myData.tMemorize = SavingDataManager.instance.tMemorize;
-        myData.tOrganize = SavingDataManager.instance.tOrganize;
-        myData.scenario = SavingDataManager.instance.scenario;
+        myData.tMemorize = SettingsDataManager.instance.tMemorize;
+        myData.tOrganize = SettingsDataManager.instance.tOrganize;
+        myData.scenario = SettingsDataManager.instance.scenario;
         myData.score = GameManager.Instance.returnScore();
 
-        string sesion = "session";
+        string game = "session"+session.ToString();
 
-        var data = new Dictionary<string, object> { { sesion, myData } };
+        var data = new Dictionary<string, object> { { game, myData } };
         await CloudSaveService.Instance.Data.ForceSaveAsync(data);
     }
     /*

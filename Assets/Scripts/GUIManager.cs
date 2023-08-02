@@ -24,7 +24,7 @@ public class GUIManager : MonoBehaviour
         topTxt = topTimer.GetComponentInChildren<TMP_Text>();
         middleTxt = middleText.GetComponentInChildren<TMP_Text>();
         bottomTxt = bottomTimer.GetComponentInChildren<TMP_Text>();
-        scenarioIndex = SavingDataManager.instance.scenario;
+        scenarioIndex = SettingsDataManager.instance.scenario;
 
         restartBtn.onClick.AddListener(onClickRestartBtn);
 

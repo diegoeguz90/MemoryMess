@@ -5,10 +5,10 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-public class SavingDataManager : MonoBehaviour
+public class SettingsDataManager : MonoBehaviour
 {
     // singleton
-    public static SavingDataManager instance;
+    public static SettingsDataManager instance;
 
     [System.Serializable]
     public class PlayerSettings

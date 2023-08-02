@@ -44,8 +44,8 @@ public class GameTimeManager : MonoBehaviour
     {
         currentState = states.instructions1;
 
-        memorizeTime = SavingDataManager.instance.tMemorize;
-        organiceTime = SavingDataManager.instance.tOrganize;
+        memorizeTime = SettingsDataManager.instance.tMemorize;
+        organiceTime = SettingsDataManager.instance.tOrganize;
 
         instructions1Timer = gameObject.AddComponent<CountDown>();
         memorizeTimer = gameObject.AddComponent<CountDown>();
