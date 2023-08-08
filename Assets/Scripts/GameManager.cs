@@ -37,19 +37,21 @@ public class GameManager : MonoBehaviour
         SaveInitialPos(); 
     }
 
-    #region GameLogic
-    private void LateUpdate()
+    private void Update()
     {
-        if (GameTimeManager.Instance.instructions1Timer._isFinish && GameTimeManager.Instance.currentState == GameTimeManager.states.instructions1)
+        //if (GameTimeManager.Instance.instructions1Timer._isFinish && GameTimeManager.Instance.currentState == GameTimeManager.states.instructions1)
+        if (GameTimeManager.Instance.currentState == GameTimeManager.states.instructions1)
         {
             grabablesInitPos = ShuffleList(grabablesInitPos);
             SetGrabablePos(grabablesInitPos);
         }
-        if (GameTimeManager.Instance.memorizeTimer._isFinish && GameTimeManager.Instance.currentState == GameTimeManager.states.memorize)
+        //if (GameTimeManager.Instance.memorizeTimer._isFinish && GameTimeManager.Instance.currentState == GameTimeManager.states.memorize)
+        if (GameTimeManager.Instance.currentState == GameTimeManager.states.memorize)
         {
             grabablesFinalPos = ShuffleList(grabablesFinalPos);
         }
-        if (GameTimeManager.Instance.instructions2Timer._isFinish && GameTimeManager.Instance.currentState == GameTimeManager.states.instructions2)
+        //if (GameTimeManager.Instance.instructions2Timer._isFinish && GameTimeManager.Instance.currentState == GameTimeManager.states.instructions2)
+        if (GameTimeManager.Instance.currentState == GameTimeManager.states.instructions2)
         {
             SetGrabablePos(grabablesFinalPos);
         }
@@ -59,6 +61,8 @@ public class GameManager : MonoBehaviour
             CalculateScore();
         }
     }
+
+    #region GameLogic
 
     private void SaveInitialPos()
     {

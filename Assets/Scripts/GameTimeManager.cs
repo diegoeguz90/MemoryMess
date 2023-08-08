@@ -9,7 +9,7 @@ public class GameTimeManager : MonoBehaviour
 
     [SerializeField] float instructionsTime;
     private float memorizeTime;
-    private float organiceTime;
+    public float organiceTime { get; private set; }
 
     public CountDown instructions1Timer { get; private set; }
     public CountDown memorizeTimer { get; private set; }
@@ -23,7 +23,7 @@ public class GameTimeManager : MonoBehaviour
         play,
         results
     }
-    public states currentState { get; private set; }
+    public states currentState { get; set; }
 
 
     private void Awake()
@@ -44,8 +44,8 @@ public class GameTimeManager : MonoBehaviour
     {
         currentState = states.instructions1;
 
-        memorizeTime = SettingsDataManager.instance.tMemorize;
-        organiceTime = SettingsDataManager.instance.tOrganize;
+        memorizeTime = SettingsManager.instance.tMemorize;
+        organiceTime = SettingsManager.instance.tOrganize;
 
         instructions1Timer = gameObject.AddComponent<CountDown>();
         memorizeTimer = gameObject.AddComponent<CountDown>();
@@ -79,7 +79,7 @@ public class GameTimeManager : MonoBehaviour
         }
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         if (instructions1Timer._isFinish && currentState == states.instructions1)
         {

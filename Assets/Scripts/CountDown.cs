@@ -5,7 +5,7 @@ using UnityEngine;
 public class CountDown : MonoBehaviour
 {
     public float _waitTime { get; private set; }
-    public bool _isFinish { get; private set; }
+    public bool _isFinish { get; set; }
 
     private void Start()
     {

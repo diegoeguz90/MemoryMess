@@ -11,7 +11,9 @@ public class GUIManager : MonoBehaviour
     [SerializeField] GameObject topTimer;
     [SerializeField] GameObject middleText;
     [SerializeField] GameObject bottomTimer;
-    [SerializeField] Button restartBtn;
+    [SerializeField] GameObject finishBtnVisual;
+    [SerializeField] GameObject exitBtnVisual;
+    [SerializeField] Button finishBtn, exitBtn;
     [SerializeField] List<GameObject> scenario;
 
     private TMP_Text topTxt;
@@ -21,12 +23,13 @@ public class GUIManager : MonoBehaviour
 
     private void Start()
     {
+        finishBtn.onClick.AddListener(onFinishBtnClick);
+        exitBtn.onClick.AddListener(onClickExitBtn);
+
         topTxt = topTimer.GetComponentInChildren<TMP_Text>();
         middleTxt = middleText.GetComponentInChildren<TMP_Text>();
         bottomTxt = bottomTimer.GetComponentInChildren<TMP_Text>();
-        scenarioIndex = SettingsDataManager.instance.scenario;
-
-        restartBtn.onClick.AddListener(onClickRestartBtn);
+        scenarioIndex = SettingsManager.instance.scenario;
 
         foreach (GameObject matrix in scenario)
         {
@@ -37,6 +40,9 @@ public class GUIManager : MonoBehaviour
         topTimer.SetActive(false);
         middleText.SetActive(false);
         bottomTimer.SetActive(false);
+        finishBtnVisual.SetActive(false);
+        exitBtnVisual.SetActive(false);
+
     }
 
     private void Update()
@@ -67,6 +73,7 @@ public class GUIManager : MonoBehaviour
             topTimer.SetActive(false);
             middleText.SetActive(false);
             bottomTimer.SetActive(true);
+            finishBtnVisual.SetActive(true);
             bottomTxt.text = GameTimeManager.Instance.organiceTimer._waitTime.ToString("0") + " seg";
         }
         if (GameTimeManager.Instance.currentState == GameTimeManager.states.results)
@@ -74,12 +81,19 @@ public class GUIManager : MonoBehaviour
             topTimer.SetActive(false);
             middleText.SetActive(true);
             bottomTimer.SetActive(false);
+            finishBtnVisual.SetActive(false);
+            exitBtnVisual.SetActive(true);
             middleTxt.text = "Puntaje: " + GameManager.Instance.returnScore();
         }
     }
 
-    void onClickRestartBtn()
+    void onClickExitBtn()
     {
         SceneManager.LoadScene(0);
+    }
+
+    void onFinishBtnClick()
+    {
+        GameTimeManager.Instance.organiceTimer._isFinish = true;
     }
 }

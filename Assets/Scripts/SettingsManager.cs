@@ -1,17 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
+using System.Data;
+using System.IO;
+using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class SettingsManager : MonoBehaviour
 {
-    [SerializeField] Slider tMemorizeSlider, tOrganizeSlider;
-    [SerializeField] TMP_Dropdown ScenarioDropdown;
-    [SerializeField] TMP_Text showMemorizeValueTxt, ShowOrganizeValueTxt;
-
-    // singleton 
+    // singleton
     public static SettingsManager instance;
+
+    [System.Serializable]
+    public class PlayerSettings
+    {
+        public int tMemorize;
+        public int tOrganize;
+        public int scenario;
+    }
+
+    public int tMemorize { get; set; }
+    public int tOrganize { get; set; }
+    public int scenario { get; set; }
+
+    public delegate void LoadData();
+    public static event LoadData OnLoadData;
 
     private void Awake()
     {
@@ -21,55 +33,35 @@ public class SettingsManager : MonoBehaviour
             return;
         }
         instance = this;
+        // persistence
+        DontDestroyOnLoad(gameObject);
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public void SaveSettings()
     {
-        SettingsDataManager.instance.tMemorize = (int)tMemorizeSlider.value;
-        SettingsDataManager.instance.tOrganize = (int)tOrganizeSlider.value;
-        SettingsDataManager.instance.scenario = ScenarioDropdown.value;
+        PlayerSettings settings = new PlayerSettings();
+        settings.tMemorize = tMemorize;
+        settings.tOrganize = tOrganize;
+        settings.scenario = scenario;
 
-        showMemorizeValueTxt.text = tMemorizeSlider.value.ToString() + " seg";
-        ShowOrganizeValueTxt.text = tOrganizeSlider.value.ToString() + " seg";
+        string json = JsonUtility.ToJson(settings);
 
-        tMemorizeSlider.onValueChanged.AddListener(onMemorySliderChanged);
-        tOrganizeSlider.onValueChanged.AddListener(onOrganizeSliderChanged);
-        ScenarioDropdown.onValueChanged.AddListener(onScenarioDropdownChanged);
+        File.WriteAllText(Application.persistentDataPath + "/userSettings.json", json);
     }
 
-    void onMemorySliderChanged(float sliderValue)
+    public void LoadSettings()
     {
-        SettingsDataManager.instance.tMemorize = (int)sliderValue;
-        showMemorizeValueTxt.text = sliderValue.ToString() + " seg";
-    }
+        string path = Application.persistentDataPath + "/userSettings.json";
+        if(File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+            PlayerSettings settings = JsonUtility.FromJson<PlayerSettings>(json);
 
-    void onOrganizeSliderChanged(float sliderValue)
-    {
-        SettingsDataManager.instance.tOrganize = (int)sliderValue;
-        ShowOrganizeValueTxt.text = sliderValue.ToString() + " seg";
-    }
+            tMemorize = settings.tMemorize;
+            tOrganize = settings.tOrganize;
+            scenario = settings.scenario;
 
-    void onScenarioDropdownChanged(int dropdownValue)
-    {
-        SettingsDataManager.instance.scenario = dropdownValue;
+            OnLoadData();
+        }
     }
-
-    void SetSettings()
-    {
-        tMemorizeSlider.value = SettingsDataManager.instance.tMemorize;
-        tOrganizeSlider.value = SettingsDataManager.instance.tOrganize;
-        ScenarioDropdown.value = SettingsDataManager.instance.scenario;
-    }
-
-    #region EventSuscription
-    private void OnEnable()
-    {
-        SettingsDataManager.OnLoadData += SetSettings;
-    }
-    private void OnDisable()
-    {
-        SettingsDataManager.OnLoadData -= SetSettings;
-    }
-    #endregion
 }

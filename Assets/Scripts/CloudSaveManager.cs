@@ -11,11 +11,11 @@ using UnityEngine.Events;
 
 public class CloudSaveManager : MonoBehaviour
 {
-    private int session;
-
     // Singleton
     public static CloudSaveManager _instance;
     public static CloudSaveManager Instance => _instance;
+
+    private int session = 0;
 
     struct saveData
     {
@@ -23,6 +23,7 @@ public class CloudSaveManager : MonoBehaviour
         public int tMemorize;
         public int tOrganize;
         public int scenario;
+        public int tPlayed;
     }
 
     private void Awake()
@@ -40,7 +41,6 @@ public class CloudSaveManager : MonoBehaviour
     // Start is called before the first frame update
     async void Start()
     {
-        session = 0;
         if(PlayerPrefs.GetInt("session") == 0)
         {
             session++;
@@ -100,10 +100,11 @@ public class CloudSaveManager : MonoBehaviour
         session++;
         PlayerPrefs.SetInt("session", session);
         saveData myData = new saveData();
-        myData.tMemorize = SettingsDataManager.instance.tMemorize;
-        myData.tOrganize = SettingsDataManager.instance.tOrganize;
-        myData.scenario = SettingsDataManager.instance.scenario;
+        myData.tMemorize = SettingsManager.instance.tMemorize;
+        myData.tOrganize = SettingsManager.instance.tOrganize;
+        myData.scenario = SettingsManager.instance.scenario;
         myData.score = GameManager.Instance.returnScore();
+        myData.tPlayed = (int)(GameTimeManager.Instance.organiceTime - GameTimeManager.Instance.organiceTimer._waitTime);
 
         string game = "session"+session.ToString();
 

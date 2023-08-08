@@ -1,14 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class GrabableManager : MonoBehaviour
 {
     [SerializeField] GameObject Selector;
 
-    AudioSource audioSource;
-    [SerializeField] AudioClip grapFx, releaseFX;
+    // this is the event
+    public delegate void pickEvent();
+    public static event pickEvent onPickEvent;
 
     public enum state
     {
@@ -43,7 +43,6 @@ public class GrabableManager : MonoBehaviour
 
     public void SetSelectorPos(GameObject selectedObject)
     {
-        audioSource = selectedObject.GetComponent<AudioSource>();
         if (GameTimeManager.Instance.currentState == GameTimeManager.states.play)
         {
             switch (currentState)
@@ -60,7 +59,7 @@ public class GrabableManager : MonoBehaviour
 
     public void ShowSelector(GameObject selectedObject)
     {
-        audioSource.PlayOneShot(grapFx);
+        onPickEvent();
         Vector2 pos = selectedObject.transform.position;
         Selector.gameObject.SetActive(true);
         Selector.transform.position = pos; 
@@ -70,7 +69,7 @@ public class GrabableManager : MonoBehaviour
 
     public void ChangePositions(GameObject selectedObject)
     {
-        audioSource.PlayOneShot(releaseFX);
+        onPickEvent();
         Selector.gameObject.SetActive(false);
         Vector2 pos = selectedObject.transform.position;
         Vector2 posTemp = selectedGameObject.transform.position;
